@@ -1,0 +1,49 @@
+<!doctype html>
+<!--
+ This page is shown when the extension button is clicked, because the
+ "browser_action" field in manifest.json contains the "default_popup" key with
+ value "popup.html".
+ -->
+<html>
+  <head>
+    <title>Stop Visiting This Shit</title>
+    <style>
+      
+      body {
+        background-image: linear-gradient(to bottom, hsla(240, 50%, 70%, 1), hsla(240, 60%, 60%, 1));
+        color: #ffffff;
+        font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+        font-size: 14px;
+        max-width: 500px;
+        min-width: 400px;
+        margin: 0;
+        padding: 0;
+      }
+
+      main {
+        padding: 25px;
+      }
+
+      p:last-child {
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+
+    </style>
+
+    <!--
+      - JavaScript and HTML must be in separate files: see our Content Security
+      - Policy documentation[1] for details and explanation.
+      -
+      - [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
+     -->
+    <script src="app.js"></script>
+  </head>
+  <body>
+    <main>
+      <p id="status">...</p>
+      <p id="counter">...</p>
+    </main>
+  </body>
+</html>
+
