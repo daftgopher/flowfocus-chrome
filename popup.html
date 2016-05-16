@@ -10,7 +10,8 @@
     <style>
       
       body {
-        background-image: linear-gradient(to bottom, hsla(240, 50%, 70%, 1), hsla(240, 60%, 60%, 1));
+        background-image: linear-gradient(to bottom, hsla(108, 28%, 60%, 1), hsla(110, 41%, 40%, 1));
+        border: 1px solid #fff;
         color: #ffffff;
         font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
         font-size: 14px;
@@ -20,13 +21,48 @@
         padding: 0;
       }
 
+      table {
+        border-collapse: collapse;
+        font-size: 0.7rem;
+        width: 100%;
+      }
+
+      td {
+        border-bottom: 1px solid #007147;
+        padding: 5px;
+      }
+
+      th {
+        border-bottom: 2px solid #007147;
+        padding: 5px;
+        text-align: left;
+      }
+
       main {
-        padding: 25px;
+        padding: 15px 25px;
+      }
+
+      p {
+        text-align: center;
+      }
+
+      #status {
+        font-size: 1rem;
+      }
+      
+      p:first-child {
+        margin-top: 0;
       }
 
       p:last-child {
         margin-top: 0;
         margin-bottom: 0;
+      }
+
+      header {
+        background-image: linear-gradient(to bottom, #EFFFEA, #DAFFD1);
+        text-align: center;
+        padding: 10px 25px;
       }
 
     </style>
@@ -37,12 +73,28 @@
       -
       - [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
      -->
-    <script src="app.js"></script>
+    <script src="popup.js"></script>
   </head>
   <body>
+    <header>
+      <img src="images/logo.png" alt="flow logo">
+    </header>
     <main>
       <p id="status">...</p>
       <p id="counter">...</p>
+      
+      <table id="dataTable">
+        <thead>
+          <tr>
+            <th>Domain</th>
+            <th>Visits Today</th>
+          </tr>
+        </thead>
+
+        <tbody id="dataTable-rows">
+          
+        </tbody>
+      </table>
     </main>
   </body>
 </html>
