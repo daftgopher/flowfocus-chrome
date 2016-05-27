@@ -17,60 +17,185 @@ function getActiveTabDomain(){
 	});
 }
 
-function isDataPresent(obj){
-	// Calling chrome.storage.get() returns an empty object if there is no data for the
-	// retrieved value. Unfortunately, empty objects are truthy so the 
-	// Object.keys(result).length below is basically a data presence check
-	return !!Object.keys(obj).length;
-}
-
 document.addEventListener('DOMContentLoaded', function(){
 	let status = document.getElementById('status');
 	let counterNode = document.getElementById('counter');
 	let rowsNode = document.getElementById('dataTable-rows');
 	let storage = chrome.storage.sync;
+
+	// DOM Elements
+	let mainEl = document.getElementById('main');
+	let formEl = document.getElementById('form');
+	let domainListEl = document.getElementById('domain-list');
+	let buttonEl = document.getElementById('add-alert');
+	let alertMessageEl = document.getElementById('alert-message');
+
+	// Query for these once the form is visible
+	let inputEl; 
+	let errorMessageEl;
+
+	// When the popup first opens, there are weird issues with the 
+	// total width of the element. We need to wait until the popup is
+	// fully displayed before showing the (offscreen) form element. 
+	window.setTimeout(function(){
+		mainEl.classList.remove('loading');
+		formEl.classList.remove('hidden');
+		inputEl = document.getElementById('alert-input');
+		errorMessageEl = document.getElementById('error-text');
+	}, 1500);
+
+
+	function activateForm(event){
+		event.preventDefault();
+		mainEl.addEventListener("transitionend", function(){
+			buttonEl.setFormStateListener();
+		});
+		mainEl.classList.add('formActive');
+	}
+
+	function deactivateForm(event){
+		event.preventDefault();
+	}
+
+	function confirmSuccess(domain){
+		buttonEl.removeAttribute('disabled');
+		inputEl.value = "";
+		buttonEl.textContent = "Submit";
+		alertMessageEl.textContent = `${domain} added to distraction alerts!`
+		alertMessageEl.classList.add('active');
+
+		window.setTimeout(function(){
+			alertMessageEl.classList.remove('active');
+		}, 4000)
+	}
+
+	function submitForm(data){
+		return new Promise(function(resolve, reject){
+			storage.get('userAlerts', (result) => {
+				let userAlerts = result.userAlerts || [];
+				userAlerts.push(data);
+				storage.set({userAlerts: userAlerts}, function(){
+					resolve(data);
+				});
+			});
+		});
+	}
+
+	buttonEl.setListStateListener = () => {
+		this.removeEventListener('click', deactivateForm);
+		this.addEventListener('click', activateForm);
+	};
+
+	buttonEl.setFormStateListener = function(){
+		this.textContent = "Submit";
+		this.removeEventListener('click', activateForm);
+		this.addEventListener('click', function(event){
+			event.preventDefault();
+			if ( inputEl.value ) { // Form is Valid
+				errorMessageEl.textContent = "";
+				buttonEl.setAttribute('disabled', 'disabled');
+				buttonEl.textContent = 'Submitting...';
+
+				// TODO: Need to extract the domain from the submitted value
+				submitForm(inputEl.value).then(confirmSuccess);
+			} else {
+				errorMessageEl.textContent = "Please enter a website";
+			};
+
+		});
+	};
+
+	buttonEl.setListStateListener();
+
+
 	storage.get('lastDomain', function(result){
 		getActiveTabDomain().then(function(domain){
 			status.textContent = `Currently visiting: ${domain}`;
 
-			storage.get('domainCounts', (result) => {
+			storage.get('domainRecords', (result) => {
 
-				if (!isDataPresent(result)) {return}
+				if (result.domainRecords.length) {
 
-				let domains = result.domainCounts;
+					// Set up the table
+					let domainRecords = result.domainRecords;
+					let tableHtml = '';
 
-				domains[Symbol.iterator] = function(){
-					let keys = Object.keys(this);
-					let count = 0;
-					let isDone = false;
-					let next = () => {
-						if (count >= keys.length){
-							isDone = true;
+					// Sort table in descending order by visit count
+					domainRecords.sort(function(a,b){
+						if (a.count < b.count){
+							return -1;
+						} else if (a.count > b.count) {
+							return 1;
+						} else {
+							return 0;
 						}
-						let obj = {};
-						let key = keys[count];
-						obj[key] = this[keys[count++]]
-						return {done: isDone, value: obj};
+					}).reverse()
+
+					for(let record of domainRecords){
+						tableHtml += 
+						`<tr>
+							<td>${record.domain}</td>
+							<td>${record.count}</td>
+						</tr>`
 					}
-					return { next }
+					rowsNode.innerHTML = tableHtml;
+
+					// Show the current domain and times visited
+					let currentDomain = domainRecords.find((record) => record.domain === domain);
+					counterNode.textContent = `You've visited this site ${currentDomain.count} ${currentDomain.count > 1 ? 'times' : 'time'} today.`;
 				}
-
-				let tableHtml = '';
-
-				for(let obj of domains){
-					let domain = Object.keys(obj)[0];
-					tableHtml += 
-					`<tr>
-						<td>${domain}</td>
-						<td>${obj[domain]}</td>
-					</tr>`
-				}
-				rowsNode.innerHTML = tableHtml;
-
-				let currentDomainCount = result.domainCounts[domain];
-				counterNode.textContent = `You've currently visited this site ${currentDomainCount} ${currentDomainCount > 1 ? 'times' : 'time'} today.`;
 
 			});
 		});
 	});
 });
+
+
+class Debug {
+
+	clear(){
+		chrome.storage.sync.clear();
+		console.log('Storage cleared');
+	}
+
+	deleteDomain(domain){
+		chrome.storage.sync.get('domainRecords', function(res){
+			let domainCounts = res.domainCounts;
+			let domainObj = domainCounts.find((record) => record.name === domain)
+			domainCounts = domainCounts.splice(domainCounts.indexOf(domainObj), 1);
+			
+			chrome.storage.sync.set({domainCounts: domainCounts}, function(){
+				console.log(`${domain} removed from storage.`);
+			});
+
+		});
+	}
+
+	deleteUserAlert(alert){
+		chrome.storage.sync.get('userAlerts', function(res){
+			let userAlerts = res.userAlerts;
+			userAlerts = userAlerts.splice(userAlerts.indexOf(alert), 1);
+			
+			chrome.storage.sync.set({userAlerts: userAlerts}, function(){
+				console.log(`${alert} removed from storage.`);
+			});
+
+		});
+	}
+
+	clearUserAlerts(){
+		chrome.storage.sync.set({userAlerts: []}, function(){
+			console.log("All user alerts cleared");
+		});
+	}
+
+	listDomains(){
+		chrome.storage.sync.get('domainRecords', (result) => console.log(result.domainRecords));
+	}
+
+	listUserAlerts(){
+		chrome.storage.sync.get('userAlerts', (result) => console.log(result.userAlerts));
+	}
+}
+
+window.d = new Debug();
