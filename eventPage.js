@@ -52,11 +52,11 @@ class Debug {
 
 	deleteDomain(domain){
 		chrome.storage.sync.get('domainRecords', function(res){
-			let domainCounts = res.domainCounts;
-			let domainObj = domainCounts.find((record) => record.name === domain)
-			domainCounts = domainCounts.splice(domainCounts.indexOf(domainObj), 1);
+			let domainRecords = res.domainRecords;
+			let domainObj = domainRecords.find((record) => record.name === domain)
+			domainRecords = domainRecords.splice(domainRecords.indexOf(domainObj), 1);
 			
-			chrome.storage.sync.set({domainCounts: domainCounts}, function(){
+			chrome.storage.sync.set({domainRecords: domainRecords}, function(){
 				console.log(`${domain} removed from storage.`);
 			});
 
@@ -147,6 +147,28 @@ function updateUrlCount(url){
 		})
 	});
 
+}
+
+function getDomainRecords(){
+	return new Promise(function(resolve, reject){
+		chrome.storage.sync.get('domainRecords', function(result){
+			return result.domainRecords || [];
+		});
+	});
+}
+
+function createDomainRecord(record = {}){
+	return new Promise(function(resolve, reject){
+		getDomainRecords()
+		.then(function(domainRecords){
+			// Assign new id by incrementing last id number
+			record.id = domainRecords[domainRecords.length - 1].id++ || 1
+			domainRecords.push(record);
+			chrome.storage.set({domainRecords: domainRecords}, function(){
+				resolve(domainRecords);
+			});
+		});
+	});
 }
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){

@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', function(){
 		event.preventDefault();
 		mainEl.addEventListener("transitionend", function(){
 			buttonEl.setFormStateListener();
+			inputEl.focus();	
 		});
 		mainEl.classList.add('formActive');
 	}
@@ -70,15 +71,16 @@ document.addEventListener('DOMContentLoaded', function(){
 	}
 
 	function submitForm(data){
-		return new Promise(function(resolve, reject){
-			storage.get('userAlerts', (result) => {
-				let userAlerts = result.userAlerts || [];
-				userAlerts.push(data);
-				storage.set({userAlerts: userAlerts}, function(){
-					resolve(data);
-				});
-			});
-		});
+		// return new Promise(function(resolve, reject){
+		// 	storage.get('userAlerts', (result) => {
+		// 		let userAlerts = result.userAlerts || [];
+		// 		userAlerts.push(data);
+		// 		storage.set({userAlerts: userAlerts}, function(){
+		// 			resolve(data);
+		// 		});
+		// 	});
+		// });
+		setNewUserAlert(data);
 	}
 
 	buttonEl.setListStateListener = () => {
@@ -92,6 +94,7 @@ document.addEventListener('DOMContentLoaded', function(){
 		this.addEventListener('click', function(event){
 			event.preventDefault();
 			if ( inputEl.value ) { // Form is Valid
+				errorMessageEl.classList.remove('is-active');
 				errorMessageEl.textContent = "";
 				buttonEl.setAttribute('disabled', 'disabled');
 				buttonEl.textContent = 'Submitting...';
@@ -99,6 +102,7 @@ document.addEventListener('DOMContentLoaded', function(){
 				// TODO: Need to extract the domain from the submitted value
 				submitForm(inputEl.value).then(confirmSuccess);
 			} else {
+				errorMessageEl.classList.add('is-active');
 				errorMessageEl.textContent = "Please enter a website";
 			};
 
@@ -142,13 +146,111 @@ document.addEventListener('DOMContentLoaded', function(){
 
 					// Show the current domain and times visited
 					let currentDomain = domainRecords.find((record) => record.domain === domain);
-					counterNode.textContent = `You've visited this site ${currentDomain.count} ${currentDomain.count > 1 ? 'times' : 'time'} today.`;
+
+					// If a tab was left open after the count is reset (when the date rolls over),
+					// the value will be undefined so we'll set a default count of 0
+					currentDomain = currentDomain || {count: 0}; 
+					counterNode.textContent = `You've visited this site ${currentDomain.count} ${currentDomain.count === 1 ? 'time' : 'times'} today.`;
 				}
 
 			});
 		});
 	});
 });
+
+function getData(str){
+	return new Promise(function(resolve, reject){
+		chrome.strorage.sync.get(str, function(result){
+			resolve(result[str]);
+		})
+	});
+}
+
+function setData(obj){
+	return new Promise(function(resolve, reject){
+		chrome.strorage.sync.set(obj, function(result){
+			resolve(obj);
+		})
+	});
+}
+
+function getDomainRecords(){
+	return new Promise(function(resolve, reject){
+		chrome.storage.sync.get('domainRecords', function(result){
+			return result.domainRecords || [];
+		});
+	});
+}
+
+function createDomainRecord(domainName, options = {}){
+	return new Promise(function(resolve, reject){
+		getDomainRecords()
+		.then(function(domainRecords){
+			// Assign new id by incrementing last id number
+			let record = {
+				id: domainRecords[domainRecords.length - 1].id++ || 1,
+				count: 1,
+				domain: domainName,
+				alert: !!options.alert
+			}
+			domainRecords.push(record);
+			chrome.storage.set({domainRecords: domainRecords}, function(){
+				resolve(domainRecords);
+			});
+		});
+	});
+}
+
+function updateDomainRecord(domain){
+	return new Promise(function(resolve, reject){
+		getDomainRecords()
+		  .then(function(domainRecords){
+
+		  });
+	});
+}
+
+function getUserAlerts(){
+	return new Promise(function(resolve, reject){
+		chrome.storage.sync.get('userAlerts', function(result){
+			return result.userAlerts || [];
+		});
+	});
+}
+
+function setNewUserAlert(alertDomainName){
+	// Check if the user has already entered this alert
+	getUserAlerts()
+	.then(function(userAlerts){
+		return new Promise(function (resolve, reject){
+			if (userAlerts.find( (name) => name === alertDomainName)) {
+				reject("User alert already exists");
+			} else {
+				userAlerts.push(alertDomainName);
+				chrome.storage.sync.set({userAlerts: userAlerts}, function(){
+					resolve();
+				});
+			}
+		});
+	})
+
+	// Check if we already have a domain record for this alert and
+	// create/update the record with the alert status.
+	.then(getDomainRecords)
+	.then(function(domainRecords){
+		return new Promise(function(resolve, reject){
+			let matchingRecord = domainRecords.find(function(record){
+				return record.domain === alertDomainName;
+			});
+
+			if (matchingRecord){
+				matchingRecord.isAlert = true;
+			} else {
+				createDomainRecord(alertDomainName, {alert: true});
+			}
+		});
+	});
+}
 
 
 class Debug {
@@ -160,11 +262,11 @@ class Debug {
 
 	deleteDomain(domain){
 		chrome.storage.sync.get('domainRecords', function(res){
-			let domainCounts = res.domainCounts;
-			let domainObj = domainCounts.find((record) => record.name === domain)
-			domainCounts = domainCounts.splice(domainCounts.indexOf(domainObj), 1);
+			let domainRecords = res.domainRecords;
+			let domainObj = domainRecords.find((record) => record.name === domain)
+			domainRecords = domainRecords.splice(domainRecords.indexOf(domainObj), 1);
 			
-			chrome.storage.sync.set({domainCounts: domainCounts}, function(){
+			chrome.storage.sync.set({domainRecords: domainRecords}, function(){
 				console.log(`${domain} removed from storage.`);
 			});
 
