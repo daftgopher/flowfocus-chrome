@@ -1,12 +1,12 @@
 module.exports = {
   entry: {
-    a: "./eventPage.js",
-    b: "./popup.js"
+    eventPage: "./eventPage.js",
+    popup: "./popup.js"
   },
   output: {
-    path: path.join(__dirname, "dist"),
-    filename: "[name].entry.js"
-  }
+    path: "app",
+    filename: "[name].js"
+  },
   module: {
     loaders: [
       {

@@ -1,5 +1,7 @@
 "use strict"
 
+require('./stylesheets/popup.scss');
+
 function extractDomain(url){
 	// Really cool way to extract domains from URLs 
 	// taken from http://stackoverflow.com/questions/8498592/extract-root-domain-name-from-string#answer-8498668
