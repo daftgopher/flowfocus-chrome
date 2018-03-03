@@ -1,0 +1,17 @@
+@import '~Stylesheets/variables.scss';
+
+header {
+  background: $white;
+  text-align: center;
+  padding: 10px 25px;
+}
+
+.headerWrap {
+  display: flex;
+  justify-content: center;
+
+  img {
+    height: 100%;
+    width: 100%;
+  }
+}

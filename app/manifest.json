@@ -1,24 +1,23 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
 
-  "name": "f.low",
+  "name": "Flow Focus",
   "description": "Tracks how much time you spend on distracting websites",
-  "version": "0.1",
+  "version": "0.3",
 
   "background": {
-    "scripts": ["eventPage.js"],
+    "scripts": ["background.js"],
     "persistent": false
   },
   "browser_action": {
     "default_icon": "images/icon.png",
     "default_popup": "popup.html",
-    "default_title": "f.low"
+    "default_title": "Flow Focus"
   },
   "permissions": [
     "activeTab",
     "tabs",
     "storage",
-    "notifications",
-    "https://ajax.googleapis.com/"
+    "notifications"
   ]
 }

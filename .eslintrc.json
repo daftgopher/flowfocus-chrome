@@ -1,0 +1,171 @@
+{
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true,
+    "commonjs": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2017,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true,
+      "jsx": true
+    }
+  },
+  "plugins": ["react"],
+  "rules": {
+    "array-callback-return": [
+      "error"
+    ],
+    "comma-dangle": [
+      "error"
+    ],
+    "eqeqeq": [
+        "error",
+        "always"
+    ],
+    "indent": [
+        "error",
+        2,
+        { "SwitchCase": 1 }
+    ],
+    "jsx-quotes": [
+        "error",
+        "prefer-double"
+    ],
+    "linebreak-style": [
+        "error",
+        "unix"
+    ],
+    "max-len": [
+      "error",
+      {
+        "code": 120,
+        "ignoreComments": true,
+        "ignoreUrls": true,
+        "ignoreStrings": true,
+        "ignoreTemplateLiterals": true,
+        "ignoreRegExpLiterals": true,
+        "ignorePattern": "<(path|svg)\\s.+"
+      }
+    ],
+    "no-console": [
+      "warn"
+    ],
+    "no-cond-assign": [
+      "error"
+    ],
+    "no-constant-condition": [
+      "error"
+    ],
+    "no-control-regex": [
+      "error"
+    ],
+    "no-debugger": [
+      "error"
+    ],
+    "no-dupe-args": [
+      "error"
+    ],
+    "no-dupe-keys": [
+      "error"
+    ],
+    "no-duplicate-case": [
+      "error"
+    ],
+    "no-empty-character-class": [
+      "error"
+    ],
+    "no-empty": [
+      "error"
+    ],
+    "no-ex-assign": [
+      "error"
+    ],
+    "no-extra-boolean-cast": [
+      "error"
+    ],
+    "no-extra-semi": [
+      "error"
+    ],
+    "no-func-assign": [
+      "error"
+    ],
+    "no-inner-declarations": [
+      "error"
+    ],
+    "no-invalid-regexp": [
+      "error"
+    ],
+    "no-irregular-whitespace": [
+      "error"
+    ],
+    "no-negated-in-lhs": [
+      "error"
+    ],
+    "no-obj-calls": [
+      "error"
+    ],
+    "no-regex-spaces": [
+      "error"
+    ],
+    "no-sparse-arrays": [
+      "error"
+    ],
+    "no-delete-var": [
+      "error"
+    ],
+    "no-fallthrough": [
+      "error"
+    ],
+    "no-mixed-spaces-and-tabs": [
+      "error"
+    ],
+    "no-octal": [
+      "error"
+    ],
+    "no-redeclare": [
+      "error"
+    ],
+    "no-this-before-super": [
+      "error"
+    ],
+    "no-undef": [
+      "error"
+    ],
+    "no-unreachable": [
+      "error"
+    ],
+    "no-unused-vars": [
+      "error"
+    ],
+    "quotes": [
+      "error",
+      "single"
+    ],
+    "react/prop-types": [
+      0
+    ],
+    "react/jsx-uses-react": [
+      "error"
+    ],
+    "react/jsx-uses-vars": [
+      "error"
+    ],
+    "semi": [
+      "error",
+      "always"
+    ],
+    "use-isnan": [
+      "error"
+    ],
+    "valid-typeof": [
+      "error"
+    ],
+    "yoda": [
+      "error",
+      "never"
+    ]
+  }
+}

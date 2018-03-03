@@ -1,0 +1,31 @@
+.alertMessage {
+  background: orange;
+  border-bottom-left-radius: 7px;
+  border-bottom-right-radius: 7px;
+  color: #fff;
+  padding: 25px;
+  position: absolute;
+  text-align: center;
+  top: 0;
+  left: 0;
+  right: 0;
+  transition: all 0.6s ease;
+  transform: translate(0, -25vh);
+  z-index: 100;
+}
+
+.alertMessage.active {
+  transform: translate(0, 0);
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+  margin: -20px 0 15px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.error.is-active {
+  opacity: 1;
+}

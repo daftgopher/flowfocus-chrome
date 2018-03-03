@@ -1,0 +1,24 @@
+@import '~Stylesheets/variables.scss';
+
+.buttonPrimary {
+  background: $teal;
+  border: 1px solid #4b8ae8;
+  border-radius: 3px;
+  color: $black;
+  font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+  font-size: 14px;
+  line-height: 2.5;
+  max-width: 200px;
+  transition: all 0.3s ease;
+  width: 250px;
+}
+
+.buttonPrimary:hover {
+  background: scale-color($teal, $lightness: 30%);
+  cursor: pointer;
+}
+
+.buttonPrimary[disabled] {
+  background: #f3f3f3;
+  color: #aaa;
+}

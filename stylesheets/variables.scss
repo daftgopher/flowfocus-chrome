@@ -1,0 +1,15 @@
+$blue: #4B93FF;
+$blue-light: #cfe2ff;
+
+$white: #FFFFFF;
+$black: #444444;
+
+$teal: #8af9f4;
+
+$teal-top: #b4fffc;
+$teal-bottom: #7ed6d2;
+
+$blue-gradient: linear-gradient(to bottom, #b4d2ff, #79aefb);
+$teal-gradient: linear-gradient(to bottom, $teal-top, $teal-bottom);
+
+$teal-gradient-hover: linear-gradient(to bottom, scale-color($teal-top, $lightness: 30%), scale-color($teal-bottom, $lightness: 30%));

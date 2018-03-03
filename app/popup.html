@@ -16,40 +16,6 @@
     <script src="popup.js"></script>
   </head>
   <body>
-    <div id="alert-message" class="alert-message"></div>
-    <header>
-      <img src="images/logo.png" alt="flow logo">
-    </header>
-    <main id="main" class="loading">
-      <div id="domain-list" class="domainListing">
-        <p id="status">...</p>
-        <p id="counter">...</p>
-        
-        <table id="dataTable">
-          <thead>
-            <tr>
-              <th>Domain</th>
-              <th>Visits Today</th>
-            </tr>
-          </thead>
-        
-          <tbody id="dataTable-rows">
-            <!-- Domain rows will be inserted here by JS -->
-          </tbody>
-        </table>
-      </div>
-      <div id="form" class="formWrapper hidden">
-        <form action="">
-          <p class="lead">Which site would you like me to warn you about when you're slacking?</p>
-          <input id="alert-input" type="text" placeholder="Enter a website" />
-          <p id="error-text" class="error"></p>
-          <small class="inputNote"><strong>Examples:</strong> facebook.com, twitter.com, reddit.com, wikipedia.org. Make sure to include the domain (e.g. ".com")</small>
-        </form>
-      </div>
-    </main>
-    <footer>
-      <button id="add-alert" class="button--primary">Add Distraction Alert</button>
-    </footer>
+    <div id="app" style="min-width: 400px; min-height: 300px"></div>
   </body>
 </html>
-

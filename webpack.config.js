@@ -1,29 +1,54 @@
+var path = require('path');
+
 module.exports = {
   entry: {
-    eventPage: "./eventPage.js",
-    popup: "./popup.js"
+    background: './background.js',
+    popup: './popup.js'
   },
   output: {
-    path: "app",
-    filename: "[name].js"
+    path: 'app',
+    filename: '[name].js'
   },
   module: {
-    loaders: [
+    rules: [
       {
         loader: 'babel-loader',
-        test: /\.js/,
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         query: {
-          presets: ['es2015']
-        },
+          presets: [
+            'es2015',
+            'react'
+          ]
+        }
       },
       {
         test: /\.scss$/,
-        loaders: ["style", "css", "sass"]
+        use: [
+          {
+            loader: 'style-loader'
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1,
+              modules: true,
+              localIdentName: '[path]___[name]__[local]___[hash:base64:5]'
+            }
+          },
+          'sass-loader'
+        ]
       }
-    ],
+    ]
   },
   resolve: {
-    extensions: ['', '.js']
+    alias: {
+      Actions: path.resolve(__dirname, 'actions'),
+      Util: path.resolve(__dirname, 'util'),
+      Reducers: path.resolve(__dirname, 'reducers'),
+      Components: path.resolve(__dirname, 'Components'),
+      Stylesheets: path.resolve(__dirname, 'stylesheets')
+    },
+    extensions: ['.js', 'jsx', '.css', '.scss']
   }
-}
+};
