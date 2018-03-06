@@ -5,6 +5,7 @@ const storageArea = chrome.storage.sync;
 const runtime = chrome.runtime;
 
 export const UPDATE_DOMAIN_COUNTS = 'UPDATE_DOMAIN_COUNTS';
+export const UPDATE_DOMAIN_PROPERTIES = 'UPDATE_DOMAIN_PROPERTIES';
 
 const updateCounts = function(records){
   return {

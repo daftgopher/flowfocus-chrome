@@ -2,30 +2,39 @@ const chrome = window.chrome;
 
 import { extractDomain } from 'Util/domainUtil';
 import { createStore, applyMiddleware } from 'redux';
-import thunkMiddleware from 'redux-thunk';
-import { wrapStore } from 'react-chrome-redux';
-import { DomainList, getActiveTabDomain } from 'Util/domainUtil';
-import { PromiseStorage } from 'Util/promiseStorage';
+import ReduxThunk from 'redux-thunk';
+import { alias, wrapStore } from 'react-chrome-redux';
 
+import { getAllDomains, getActiveTabDomain } from 'Util/domainUtil';
+
+import updateDomainProperties from 'Actions/updateDomainProperties';
 import updateCurrentDomain from 'Actions/updateCurrentDomain';
 import updateDomainCounts from 'Actions/updateDomainCounts';
 import cleanIfNewDay from 'Actions/cleanIfNewDay';
 
 import rootReducer from 'Reducers/rootReducer';
 
-const domainList = new DomainList();
-
 let store;
 
+const aliases = {
+  'update-domain-properties': ({domain, propertiesObj}) => {
+    store.dispatch(updateDomainProperties(domain, propertiesObj));
+    return {type: 'NOOP'};
+  }
+};
+
+
 async function setupStore(){
-  let records = await domainList.getAll();
+  let records = await getAllDomains();
   store = createStore(
     rootReducer,
     {
-      domainList: records,
-      domainAlerts: []
+      domainList: records
     },
-    applyMiddleware(thunkMiddleware)
+    applyMiddleware(
+      alias(aliases),
+      ReduxThunk
+    )
   );
   const activeDomain = await getActiveTabDomain();
   store.dispatch(updateCurrentDomain(activeDomain));
@@ -34,17 +43,10 @@ async function setupStore(){
   }
   wrapStore(store, {portName: 'FLOWFOCUS_APP'});
   store.dispatch(cleanIfNewDay());
+  window.reduxStore = store; // For debugging
 }
 
 setupStore();
-
-window.getStorageArea = function(){
-  chrome.storage.sync.get(null, (res) => console.log('Storage: ', res));
-};
-
-window.setStorageArea = (obj) => PromiseStorage.set(obj).then( () => {
-  PromiseStorage.get(null).then( (res) => console.log(res) );
-});
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.url){

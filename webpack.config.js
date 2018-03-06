@@ -38,16 +38,35 @@ module.exports = {
           },
           'sass-loader'
         ]
+      },
+      {
+        test: /\.svg$/,
+        use: [
+          {
+            loader: 'babel-loader',
+            query: {
+              presets: ['es2015']
+            }
+          },
+          {
+            loader: 'react-svg-loader',
+            query: {
+              jsx: true
+            }
+          }
+        ]
       }
     ]
   },
   resolve: {
     alias: {
       Actions: path.resolve(__dirname, 'actions'),
-      Util: path.resolve(__dirname, 'util'),
-      Reducers: path.resolve(__dirname, 'reducers'),
       Components: path.resolve(__dirname, 'Components'),
-      Stylesheets: path.resolve(__dirname, 'stylesheets')
+      Images: path.resolve(__dirname, 'images'),
+      Reducers: path.resolve(__dirname, 'reducers'),
+      Stylesheets: path.resolve(__dirname, 'stylesheets'),
+      Util: path.resolve(__dirname, 'util')
+
     },
     extensions: ['.js', 'jsx', '.css', '.scss']
   }

@@ -1,13 +1,12 @@
 import { combineReducers } from 'redux';
+import lastAlert from './lastAlert.js';
 import currentDomain from './currentDomain.js';
 import domainList from './domainList.js';
-import form from './form.js';
-import { reducer as formReducer } from 'redux-form'
 
 const rootReducer = combineReducers({
+  lastAlert,
   currentDomain,
-  domainList,
-  form: formReducer
+  domainList
 });
 
 export default rootReducer;

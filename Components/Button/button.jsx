@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './buttonStyles.scss';
 
-const Button = ({clickHandler, text, isForm}) => {
+const Button = ({clickHandler, text, disabled}) => {
 
   const handleClick = (e) => {
     e.preventDefault();
@@ -9,7 +9,7 @@ const Button = ({clickHandler, text, isForm}) => {
   };
 
   return(
-    <button className={styles.buttonPrimary} onClick={handleClick}>{text}</button>
+    <button className={styles.buttonPrimary} onClick={handleClick} disabled={disabled}>{text}</button>
   );
 };
 export default Button;

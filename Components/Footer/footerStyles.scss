@@ -1,7 +1,13 @@
 @import '~Stylesheets/variables.scss';
 
 .footer {
+  align-items: center;
   background: $blue;
+  color: $white;
+  display: flex;
+  font-size: 12px;
+  justify-content: center;
+  min-height: 72px;
   padding: 15px;
   text-align: center;
 }

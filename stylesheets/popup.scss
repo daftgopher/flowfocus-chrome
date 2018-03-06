@@ -1,13 +1,17 @@
 @import '~Stylesheets/variables.scss';
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   background: #fff;
   border: 1px solid $blue;
   color: $blue;
   font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
   font-size: 14px;
-  max-width: 500px;
-  min-width: 400px;
+  height: 400px;
   margin: 0;
   padding: 0;
+  width: 400px;
 }

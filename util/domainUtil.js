@@ -1,37 +1,27 @@
 const chrome = window.chrome;
 const runtime = chrome.runtime;
-const storageArea = chrome.storage.sync;
 
-class DomainList {
+import PromiseStorage from 'Util/promiseStorage';
 
-  getAll(){
-    return new Promise(function(resolve, reject){
-      storageArea.get('domainList', function(result){
-        if (runtime.lastError) {
-          reject(runtime.lastError);
-        }
-        resolve(result.domainList || []);
-      });
-    });
-  }
+// class DomainList {
+//
+//   getAll(){
+//     return new Promise(function(resolve, reject){
+//       storageArea.get('domainList', function(result){
+//         if (runtime.lastError) {
+//           reject(runtime.lastError);
+//         }
+//         resolve(result.domainList || []);
+//       });
+//     });
+//   }
+// }
 
-  setRecord(domainName, options = {}){
-    return new Promise(function(resolve){
-      this.getRecords()
-      .then(function(domainList){
-        // Assign new id by incrementing last id number
-        let record = {
-          id: domainList[domainList.length - 1].id++ || 1,
-          count: 1,
-          domain: domainName,
-          alert: !!options.alert
-        };
-        domainList.push(record);
-        storageArea.set({domainList: domainList}, function(){
-          resolve(domainList);
-        });
-      });
-    });
+async function getAllDomains(){
+  try {
+    return await PromiseStorage.get('domainList');
+  } catch(e) {
+    return runtime.lastError;
   }
 }
 
@@ -64,4 +54,4 @@ function sortDescending(arr){
   }).reverse();
 }
 
-export {DomainList, extractDomain, getActiveTabDomain, sortDescending};
+export {getAllDomains, extractDomain, getActiveTabDomain, sortDescending};

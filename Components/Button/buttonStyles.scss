@@ -6,11 +6,11 @@
   border-radius: 3px;
   color: $black;
   font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 2.5;
-  max-width: 200px;
+  max-width: 400px;
+  padding: 5px 25px;
   transition: all 0.3s ease;
-  width: 250px;
 }
 
 .buttonPrimary:hover {

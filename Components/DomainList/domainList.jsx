@@ -1,10 +1,9 @@
 import React from 'react';
 import styles from './domainListStyles.scss';
-// import classnames from 'classnames';
 
 import { sortDescending } from 'Util/domainUtil.js';
 
-// const cx = classnames.bind(styles);
+import BellImage from 'Images/notification_bell.svg';
 
 const DomainList = ({domainList}) => {
   return (
@@ -20,7 +19,14 @@ const DomainList = ({domainList}) => {
           {sortDescending(domainList).map( (item, idx) => {
             return (
               <tr key={idx}>
-                <td>{item.domain}</td>
+                <td>
+                  {item.domain}
+                  {item.hasAlert &&
+                    <span title="This site will provide notification alerts">
+                      <BellImage className={styles.bellIcon} />
+                    </span>
+                  }
+                </td>
                 <td>{item.count}</td>
               </tr>
             );
