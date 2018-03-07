@@ -5,7 +5,8 @@ import { createStore, applyMiddleware } from 'redux';
 import ReduxThunk from 'redux-thunk';
 import { alias, wrapStore } from 'react-chrome-redux';
 
-import { getAllDomains, getActiveTabDomain } from 'Util/domainUtil';
+import { getAllDomains, getActiveTabDomain, findByDomain } from 'Util/domainUtil';
+import maybeShowAlert from 'Util/maybeShowAlert';
 
 import updateDomainProperties from 'Actions/updateDomainProperties';
 import updateCurrentDomain from 'Actions/updateCurrentDomain';
@@ -49,15 +50,24 @@ async function setupStore(){
 setupStore();
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  // console.log('Tab ID: ', tabId);
+  console.log('Change Info: ', changeInfo);
+  // console.log('Tab: ', tab);
   if (changeInfo.url){
     const newDomain = extractDomain(tab.url);
     chrome.storage.sync.get('currentDomain', function(result){
       if (newDomain !== result.currentDomain) {
         store.dispatch(updateCurrentDomain(newDomain));
         if (newDomain !== 'newtab'){
-          store.dispatch(updateDomainCounts(newDomain));
+          store.dispatch(updateDomainCounts(newDomain)).then(result => {
+            maybeShowAlert(findByDomain(result.records, newDomain));
+          });
         }
       }
     });
+  }
+
+  if (changeInfo.favIconUrl) {
+    // someday do stuff to save image later here...
   }
 });

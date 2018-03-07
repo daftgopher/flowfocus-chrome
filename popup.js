@@ -4,7 +4,8 @@ import ReactDOM from 'react-dom';
 import App from './Components/App/app.jsx';
 import { Provider } from 'react-redux';
 import { Store } from 'react-chrome-redux';
-// import PromiseStorage from 'Util/promiseStorage';
+import updateCurrentDomain from 'Actions/updateCurrentDomain';
+import { getActiveTabDomain } from 'Util/domainUtil';
 
 const chrome = chrome || window.chrome;
 
@@ -31,6 +32,9 @@ document.addEventListener('DOMContentLoaded', function(){
   });
 
   store.ready().then( () => {
+    // Update the current domain whenever the popup is loaded 
+    getActiveTabDomain().then(domain => store.dispatch(updateCurrentDomain(domain)));
+
     ReactDOM.render(
       <Provider store={store}>
         <App />

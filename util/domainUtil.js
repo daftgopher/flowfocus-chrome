@@ -3,26 +3,16 @@ const runtime = chrome.runtime;
 
 import PromiseStorage from 'Util/promiseStorage';
 
-// class DomainList {
-//
-//   getAll(){
-//     return new Promise(function(resolve, reject){
-//       storageArea.get('domainList', function(result){
-//         if (runtime.lastError) {
-//           reject(runtime.lastError);
-//         }
-//         resolve(result.domainList || []);
-//       });
-//     });
-//   }
-// }
-
 async function getAllDomains(){
   try {
     return await PromiseStorage.get('domainList');
   } catch(e) {
     return runtime.lastError;
   }
+}
+
+function findByDomain(domainList, domainName) {
+  return domainList.find(domainObj => domainObj.domain === domainName);
 }
 
 function extractDomain(url){
@@ -54,4 +44,4 @@ function sortDescending(arr){
   }).reverse();
 }
 
-export {getAllDomains, extractDomain, getActiveTabDomain, sortDescending};
+export {getAllDomains, extractDomain, getActiveTabDomain, sortDescending, findByDomain};
