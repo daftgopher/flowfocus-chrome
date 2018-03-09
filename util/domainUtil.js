@@ -32,6 +32,18 @@ function getActiveTabDomain(){
   });
 }
 
+function sortAlphabetically(arr){
+  return arr.sort( (a, b) => {
+    if (a.domain < b.domain){
+      return -1;
+    } else if (a.domain > b.domain) {
+      return 1;
+    } else {
+      return 0;
+    }
+  });
+}
+
 function sortDescending(arr){
   return arr.sort((a, b) => {
     if (a.count < b.count){
@@ -44,4 +56,4 @@ function sortDescending(arr){
   }).reverse();
 }
 
-export {getAllDomains, extractDomain, getActiveTabDomain, sortDescending, findByDomain};
+export {getAllDomains, extractDomain, getActiveTabDomain, sortDescending, sortAlphabetically, findByDomain};

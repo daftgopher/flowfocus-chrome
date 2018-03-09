@@ -1,5 +1,7 @@
 import { PromiseStorage } from 'Util/promiseStorage';
 
+import updatePersistentAlerts from 'Actions/updatePersistentAlerts';
+
 export const CLEAR_STORE = 'CLEAR_STORE';
 export const NOOP = 'NOOP';
 
@@ -14,31 +16,42 @@ const cleanOldNotifications = () => {
   });
 };
 
-function cleanIfNewDay() {
-  return async function(dispatch){
-    const currentDay = new Date().getDate();
-    const lastDay = await PromiseStorage.get('lastDayUpdated').then(res => res.lastDayUpdated);
+async function getPersistentAlerts(){
+  let {persistentAlerts, domainList} = await PromiseStorage.get(['persistentAlerts', 'domainList']);
 
-    if (currentDay !== lastDay) {
-      cleanOldNotifications();
-      await PromiseStorage.clear();
-      PromiseStorage.set({lastDayUpdated: currentDay});
-      dispatch(clean(currentDay));
-    } else {
-      dispatch({
-        type: 'NOOP'
-      });
-    }
+  // Return an array of domain names
+  return persistentAlerts.concat(
+    domainList.filter(domainObj => domainObj.hasAlert).map(domainObj => domainObj.domain)
+  );
+}
+
+function cleanIfNewDay(currentDay) {
+  return async function(dispatch){
+    cleanOldNotifications();
+    const persistentAlerts = await getPersistentAlerts();
+    await PromiseStorage.clear();
+    PromiseStorage.set({lastDayUpdated: currentDay});
+    dispatch(clean(currentDay));
+    dispatch(updatePersistentAlerts(persistentAlerts));
   };
 }
 
-const clean = function(day){
+const clean = function(day, persistentAlerts){
   return {
     type: CLEAR_STORE,
     action: {
-      lastDayUpdated: day
+      lastDayUpdated: day,
+      persistentAlerts
     }
   };
 };
 
 export default cleanIfNewDay;
+
+// window.testCleanIfNewDay = function(){
+//   cleanIfNewDay()();
+// };
+//
+// window.testGetPersistentAlerts = () => {
+//   getPersistentAlerts().then(res => console.log(res));
+// };

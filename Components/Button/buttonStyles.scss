@@ -1,24 +1,39 @@
 @import '~Stylesheets/variables.scss';
 
-.buttonPrimary {
-  background: $teal;
-  border: 1px solid #4b8ae8;
+@mixin button($background: $green){
+  background: $background;
+  border: none;
   border-radius: 3px;
-  color: $black;
+  color: $white;
   font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
   font-size: 12px;
-  line-height: 2.5;
+  line-height: 1.5;
   max-width: 400px;
-  padding: 5px 25px;
+  padding: 10px 25px;
   transition: all 0.3s ease;
+
+  &:hover {
+    background: scale-color($background, $lightness: 10%);
+    cursor: pointer;
+  }
+
+  &[disabled] {
+    background: #f3f3f3;
+    color: #aaa;
+  }
 }
 
-.buttonPrimary:hover {
-  background: scale-color($teal, $lightness: 30%);
-  cursor: pointer;
+.buttonPrimary {
+  @include button(#00c541);
+  box-shadow: $green-button-shadow;
+
+  &:hover {
+    background: scale-color(#00c541, $lightness: 4%);
+  }
 }
 
-.buttonPrimary[disabled] {
-  background: #f3f3f3;
-  color: #aaa;
+.buttonSecondary {
+  @include button;
+  font-size: 10px;
+  padding: 5px 15px;
 }

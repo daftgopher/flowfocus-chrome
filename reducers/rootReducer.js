@@ -1,12 +1,14 @@
 import { combineReducers } from 'redux';
-import lastAlert from './lastAlert.js';
+import lastNotification from './lastNotification.js';
 import currentDomain from './currentDomain.js';
 import domainList from './domainList.js';
+import persistentAlerts from './persistentAlerts.js';
 
 const rootReducer = combineReducers({
-  lastAlert,
+  lastNotification,
   currentDomain,
-  domainList
+  domainList,
+  persistentAlerts
 });
 
 export default rootReducer;

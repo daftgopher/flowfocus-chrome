@@ -1,4 +1,4 @@
-.alertMessage {
+.toastNotification {
   background: orange;
   color: #fff;
   font-size: 12px;
@@ -13,7 +13,7 @@
   z-index: 100;
 }
 
-.alertMessage.active {
+.toastNotification.active {
   transform: translate(0, 0);
 }
 

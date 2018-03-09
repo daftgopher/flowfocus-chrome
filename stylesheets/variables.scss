@@ -1,15 +1,21 @@
 $blue: #4B93FF;
 $blue-light: #cfe2ff;
 
+$blue-link: #4279a2;
+
 $white: #FFFFFF;
 $black: #444444;
 
 $teal: #8af9f4;
 
+$green: #3dab61;
+
+$green-button-shadow: 0.5px 1.5px 0 #038e31;
+
 $teal-top: #b4fffc;
 $teal-bottom: #7ed6d2;
 
-$blue-gradient: linear-gradient(to bottom, #b4d2ff, #79aefb);
+$blue-gradient: linear-gradient(to bottom, #5a9cff, #4B93FF);
 $teal-gradient: linear-gradient(to bottom, $teal-top, $teal-bottom);
 
 $teal-gradient-hover: linear-gradient(to bottom, scale-color($teal-top, $lightness: 30%), scale-color($teal-bottom, $lightness: 30%));
