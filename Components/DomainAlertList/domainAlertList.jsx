@@ -5,6 +5,8 @@ import { sortAlphabetically } from 'Util/domainUtil.js';
 
 import Button from 'Components/Button/button.jsx';
 
+import XMarkImage from 'Images/x_mark.svg';
+
 const DomainAlertList = ({domainList, removeAlert, backToList}) => {
   const sortedDomainList = sortAlphabetically(domainList);
   return (
@@ -27,7 +29,7 @@ const DomainAlertList = ({domainList, removeAlert, backToList}) => {
                     className={styles.remove}
                     onClick={() => removeAlert(item.domain)}
                   >
-                    &times; Remove Alert
+                    <XMarkImage className={styles.xMark} /> Remove Alert
                   </span>
                 </td>
               </tr>

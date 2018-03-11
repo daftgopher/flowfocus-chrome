@@ -12,6 +12,7 @@ import Header from 'Components/Header/header.jsx';
 import ToastNotification from 'Components/ToastNotification/toastNotification.jsx';
 
 import BellImage from 'Images/notification_bell.svg';
+import XMarkImage from 'Images/x_mark.svg';
 
 class App extends React.Component {
 
@@ -97,7 +98,7 @@ class App extends React.Component {
           {
             !!this.state.editingAlerts &&
             <div className={styles.manageAlertsButton} onClick={this.toggleListState}>
-              <span>&times; Back</span>
+              <span><XMarkImage className={styles.xMark} /> Back</span>
             </div>
           }
         </div>

@@ -1,5 +1,9 @@
 .DS_Store
 node_modules/
 appDebug.js
+app/popup.html
 app/background.js
 app/popup.js
+app/popup.css
+app/popup.*.css
+*.map

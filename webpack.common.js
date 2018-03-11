@@ -1,4 +1,5 @@
-var path = require('path');
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -6,7 +7,7 @@ module.exports = {
     popup: './popup.js'
   },
   output: {
-    path: 'app',
+    path: path.resolve(__dirname, 'app'),
     filename: '[name].js'
   },
   module: {
@@ -22,23 +23,8 @@ module.exports = {
           ]
         }
       },
-      {
-        test: /\.scss$/,
-        use: [
-          {
-            loader: 'style-loader'
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              importLoaders: 1,
-              modules: true,
-              localIdentName: '[path]___[name]__[local]___[hash:base64:5]'
-            }
-          },
-          'sass-loader'
-        ]
-      },
+      // Stylesheet loading is handled differently depending on environment
+      // see configs in webpack.dev.js and webpack.prod.js for style loaders
       {
         test: /\.svg$/,
         use: [
@@ -69,5 +55,13 @@ module.exports = {
 
     },
     extensions: ['.js', 'jsx', '.css', '.scss']
-  }
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      excludeChunks: ['background'],
+      filename: 'popup.html',
+      inject: 'head',
+      template: 'popup.html'
+    })
+  ]
 };

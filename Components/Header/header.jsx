@@ -4,7 +4,7 @@ import styles from './headerStyles.scss';
 const Header = () => (
   <header>
     <figure className={styles.headerWrap}>
-      <img src="images/logo.png" alt="flow logo" />
+      <img src="images/logo.png" alt="FlowFocus Logo" />
     </figure>
   </header>
 );
