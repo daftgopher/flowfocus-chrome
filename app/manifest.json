@@ -24,5 +24,6 @@
     "tabs",
     "storage",
     "notifications"
-  ]
+  ],
+  "short_name": "Keep track of how often you visit distracting websites."
 }
