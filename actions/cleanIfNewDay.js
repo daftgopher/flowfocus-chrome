@@ -17,7 +17,7 @@ const cleanOldNotifications = () => {
 };
 
 async function getPersistentAlerts(){
-  let {persistentAlerts, domainList} = await PromiseStorage.get(['persistentAlerts', 'domainList']);
+  let {persistentAlerts = [], domainList = []} = await PromiseStorage.get(['persistentAlerts', 'domainList']);
 
   // Return an array of domain names
   return persistentAlerts.concat(
@@ -47,11 +47,3 @@ const clean = function(day, persistentAlerts){
 };
 
 export default cleanIfNewDay;
-
-// window.testCleanIfNewDay = function(){
-//   cleanIfNewDay()();
-// };
-//
-// window.testGetPersistentAlerts = () => {
-//   getPersistentAlerts().then(res => console.log(res));
-// };
