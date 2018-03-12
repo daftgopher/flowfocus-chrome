@@ -1,6 +1,6 @@
 {
   "name": "flow",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Chrome plugin to track distracting site visits and alert you when you may be spending too much time on them.",
   "main": "eventPage.js",
   "scripts": {
