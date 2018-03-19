@@ -42,7 +42,7 @@ async function setupStore(){
     )
   );
   const activeDomain = await getActiveTabDomain();
-  store.dispatch(updateCurrentDomain(activeDomain));
+  await store.dispatch(updateCurrentDomain(activeDomain));
   if (activeDomain !== 'newtab'){
     store.dispatch(updateDomainCounts(activeDomain));
   }
@@ -57,7 +57,7 @@ async function setupStore(){
 setupStore();
 
 async function updateDomainStats(newDomain){
-  store.dispatch(updateCurrentDomain(newDomain));
+  await store.dispatch(updateCurrentDomain(newDomain));
   if (newDomain !== 'newtab'){
     const {records} = await store.dispatch(updateDomainCounts(newDomain));
     const domainObj = findByDomain(records, newDomain);
@@ -99,7 +99,9 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 chrome.tabs.onActivated.addListener(activeInfo => {
   chrome.tabs.get(activeInfo.tabId, async (tab) => {
     const domain = extractDomain(tab.url);
+    await store.dispatch(updateCurrentDomain(domain));
     await checkIfShouldCleanStore();
+
     const {domainList} = await PromiseStorage.get('domainList');
     const domainObj = findByDomain(domainList, domain);
     updateBadgeCount(domainObj);
