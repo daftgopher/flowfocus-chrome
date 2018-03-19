@@ -3,7 +3,7 @@
 
   "name": "Flow Focus",
   "description": "Tracks how much time you spend on distracting websites",
-  "version": "0.0.2",
+  "version": "0.0.3",
 
   "background": {
     "scripts": ["background.js"],
