@@ -18,15 +18,17 @@ class App extends React.Component {
 
   constructor(props){
     super(props);
-    this.state = {buttonDisabled: false};
+    this.state = {
+      buttonDisabled: false,
+      editingAlerts: false
+    };
     this.currentDomainHasUserAlert = this.currentDomainHasUserAlert.bind(this);
     this.renderList = this.renderList.bind(this);
-    this.toggleEditState = this.toggleEditState.bind(this);
     this.toggleListState = this.toggleListState.bind(this);
   }
 
   componentDidUpdate(prevProps){
-    if (this.props.lastNotification && (prevProps.lastNotification !== this.props.lastNotification) ){
+    if (this.props.lastNotification && (prevProps.lastNotification !== this.props.lastNotification)){
       this.triggerToastMessage(this.props.lastNotification);
     }
   }
@@ -37,12 +39,8 @@ class App extends React.Component {
     });
   }
 
-  toggleEditState(){
-    this.setState({editingAlerts: true});
-  }
-
   toggleListState(){
-    this.setState({editingAlerts: false});
+    this.setState({editingAlerts: !this.state.editingAlerts});
   }
 
   currentDomainHasUserAlert(){
@@ -63,27 +61,21 @@ class App extends React.Component {
   }
 
   render(){
-    const {currentDomain, domainList = [], addAlert, toastNotification, lastNotification = null} = this.props;
+    const {
+      currentDomain,
+      domainList = [],
+      addAlert, // From Redux store
+      toastNotification, // From Redux store
+      lastNotification = null
+    } = this.props;
+
     const triggerAlert = (currentDomain) => {
       addAlert(currentDomain);
       toastNotification(`Distraction alert added for ${currentDomain}`);
     };
 
-    const renderMainView = () => {
-      const currentDomainObj = domainList.find(obj => obj.domain === currentDomain);
-      const currentDomainCount = currentDomainObj ? currentDomainObj.count : 0;
-      return (
-        <div>
-          <CurrentDomainStatus name={currentDomain} count={currentDomainCount} />
-          {this.renderList(domainList)}
-          <Footer
-            clickHandler={() => triggerAlert(currentDomain)}
-            currentDomain={currentDomain}
-            hasAlert={this.currentDomainHasUserAlert()}
-          />
-        </div>
-      );
-    };
+    const currentDomainObj = domainList.find(obj => obj.domain === currentDomain);
+    const currentDomainCount = currentDomainObj ? currentDomainObj.count : 0;
 
     return(
       <div className={styles.appWrap}>
@@ -91,12 +83,12 @@ class App extends React.Component {
         <div className={styles.utilityActions}>
 
           { !this.state.editingAlerts &&
-            <div className={styles.manageAlertsButton} onClick={this.toggleEditState}>
-              <BellImage className={styles.bellImage} /> <span>Manage Alerts</span>
+            <div className={styles.manageAlertsButton} onClick={this.toggleListState}>
+              <span><BellImage className={styles.bellImage} /> Manage Alerts</span>
             </div>
           }
           {
-            !!this.state.editingAlerts &&
+            this.state.editingAlerts &&
             <div className={styles.manageAlertsButton} onClick={this.toggleListState}>
               <span><XMarkImage className={styles.xMark} /> Back</span>
             </div>
@@ -104,7 +96,15 @@ class App extends React.Component {
         </div>
         <Header />
         <main id="main" className={styles.main}>
-          {renderMainView()}
+          <div>
+            <CurrentDomainStatus name={currentDomain} count={currentDomainCount} />
+            {this.renderList(domainList)}
+            <Footer
+              clickHandler={() => triggerAlert(currentDomain)}
+              currentDomain={currentDomain}
+              hasAlert={this.currentDomainHasUserAlert()}
+            />
+          </div>
         </main>
       </div>
     );

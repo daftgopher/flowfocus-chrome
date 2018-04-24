@@ -83,6 +83,8 @@ async function checkIfShouldCleanStore(){
   }
 }
 
+
+// New site visit
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.url){
     const newDomain = extractDomain(tab.url);
@@ -96,6 +98,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   }
 });
 
+// Tab switch
 chrome.tabs.onActivated.addListener(activeInfo => {
   chrome.tabs.get(activeInfo.tabId, async (tab) => {
     const domain = extractDomain(tab.url);
